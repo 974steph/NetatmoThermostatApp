@@ -1,10 +1,10 @@
 {
     "plugin_id": "netatmotherm",
     "name_fr": "Thermostat Netatmo App",
-    "icon": "Netatmo_Thermo.png",
-    "version": "4.0",
+    "icon": "netatmo_energie.png",
+    "version": "4.1",
     "creation_date": "2017-12-03",
-    "modification_date": "2017-12-10",
+    "modification_date": "2017-12-28",
     "author": "<a href='https://twitter.com/Thibautg16' target='_blank'>@Thibautg16</a> / <a href='https://github.com/Thibautg16/NetatmoThermostatApp' target='_blank'> GitHub </a>",
     "description_fr": "Gestion avancée de votre <a href='https://www.netatmo.com/fr-FR/product/energy/' target='_blank'>Thermostat Netatmo</a> depuis votre box Eedomus.<br/>Application personnalisable, vous pouvez choisir d'installer ou non les canaux optionnels",
     "description_en": "Advanced management of your <a href='https://www.netatmo.com/product/energy/' target='_blank'>Netatmo thermostat</a> from your Eedomus box.<br/>Customizable application, you can choose to install or not the optional channels",
@@ -43,25 +43,40 @@
                 "field": "width:110, allowBlank:false, store:[['away', 'Permanent'], [1, '1H'], [2, '2H'], [3, '3H'], [4, '4H'], [5, '5H'], [6, '6H']], editable: false, shadow: true, triggerAction: 'all', typeAhead:true"
             },
             {
-                "parameter": "combo_relais_wifi",
-                "description": "Informations signal wifi du relais :",
-                "xtype": "combo",
-                "default_value": 0,
-                "field": "width:110, allowBlank:false, store:[[0, 'Non'], [1, 'Oui']], editable: false, shadow: true, triggerAction: 'all', typeAhead:true"
+                "parameter": "box_consigne",
+                "description": "Consigne chauffage :",
+                "xtype": "checkbox",
+                "field": "style: 'margin-top: 6px;', checked: true"
+            }, 
+            {
+                "parameter": "box_mode",
+                "description": "Mode chauffage :",
+                "xtype": "checkbox",
+                "field": "style: 'margin-top: 6px;', checked: true"
+            },           
+            {
+                "parameter": "box_etat_chauffage",
+                "description": "Etat chauffage :",
+                "xtype": "checkbox",
+                "field": "style: 'margin-top: 6px;', checked: true"
             },
             {
-                "parameter": "combo_thermo_batt",
+                "parameter": "box_relais_wifi",
+                "description": "Informations signal wifi du relais :",
+                "xtype": "checkbox",
+                "field": "style: 'margin-top: 6px;', checked: false"
+            },
+            {
+                "parameter": "box_thermo_batt",
                 "description": "Informations batterie thermostat :",
-                "xtype": "combo",
-                "default_value": 0,
-                "field": "width:110, allowBlank:false, store:[[0, 'Non'], [1, 'Oui']], editable: false, shadow: true, triggerAction: 'all', typeAhead:true"
+                "xtype": "checkbox",
+                "field": "style: 'margin-top: 6px;', checked: false"
             },            
             {
-                "parameter": "combo_thermo_rf",
+                "parameter": "box_thermo_rf",
                 "description": "Informations signal radio (RF) :",
-                "xtype": "combo",
-                "default_value": 0,
-                "field": "width:110, allowBlank:false, store:[[0, 'Non'], [1, 'Oui']], editable: false, shadow: true, triggerAction: 'all', typeAhead:true"
+                "xtype": "checkbox",
+                "field": "style: 'margin-top: 6px;', checked: false"
             }            
         ],
     "scripts":
@@ -82,18 +97,19 @@
                 "icon": "thermometer.png",
                 "parameters":
                     {
-			"VAR1": "plugin.parameters.oauth_code",
-			"VAR2": "module_id=plugin.parameters.thermostat_mac&device_id=plugin.parameters.relais_mac",
+				        "VAR1": "plugin.parameters.oauth_code",
+				        "VAR2": "module_id=plugin.parameters.thermostat_mac&device_id=plugin.parameters.relais_mac",
                         "VAR3": "plugin.parameters.maintainmode",                        
                         "value_type": "float",
                         "ignore_errors": 3,
                         "RAW_URL": "http://localhost/script/?exec=netatmo_thermostat_oauth.php&oauth_code=[VAR1]&[VAR2]",
                         "RAW_XPATH": "/netatmo/temperature",
-                        "POLLING": "10"
+                        "POLLING": "5"
                     }
             },
             {
                 "device_id": "consigne",
+                "create":"plugin.parameters.box_consigne",
                 "module_id": "41",
                 "parent_id": "temperature",
                 "type": "http",
@@ -102,20 +118,20 @@
                 "value_unit": "°C",
                 "parameters":
                     {
-			"VAR1": "plugin.parameters.oauth_code",
-			"VAR2": "module_id=plugin.parameters.thermostat_mac&device_id=plugin.parameters.relais_mac",
+				        "VAR1": "plugin.parameters.oauth_code",
+				        "VAR2": "module_id=plugin.parameters.thermostat_mac&device_id=plugin.parameters.relais_mac",
                         "VAR3": "plugin.parameters.maintainmode",   
                         "value_type": "list",
                         "ignore_errors": 3,
                         "RAW_URL": "http://localhost/script/?exec=netatmo_thermostat_oauth.php&oauth_code=[VAR1]&[VAR2]",
                         "RAW_XPATH": "/netatmo/setpoint_temperature",
-                        "POLLING": "10"
+                        "POLLING": "5"
                     },
                 "values":
                     [
                         { "value": "16", "icon": "consigne64.png", "description": "16°C", "http_url": "http://localhost/script/?exec=netatmo_thermostat_oauth.php", "http_type": "GET",  "http_params": "&oauth_code=[VAR1]&[VAR2]&maintain_setpoint=[VAR3]&setpoint_temperature=16" },
-			{ "value": "16.5", "icon": "consigne64.png", "description": "16.5°C", "http_url": "http://localhost/script/?exec=netatmo_thermostat_oauth.php", "http_type": "GET",  "http_params": "&oauth_code=[VAR1]&[VAR2]&maintain_setpoint=[VAR3]&setpoint_temperature=16.5" },
-			{ "value": "17", "icon": "consigne64.png", "description": "17°C", "http_url": "http://localhost/script/?exec=netatmo_thermostat_oauth.php", "http_type": "GET",  "http_params": "&oauth_code=[VAR1]&[VAR2]&maintain_setpoint=[VAR3]&setpoint_temperature=17" },
+                        { "value": "16.5", "icon": "consigne64.png", "description": "16.5°C", "http_url": "http://localhost/script/?exec=netatmo_thermostat_oauth.php", "http_type": "GET",  "http_params": "&oauth_code=[VAR1]&[VAR2]&maintain_setpoint=[VAR3]&setpoint_temperature=16.5" },
+                        { "value": "17", "icon": "consigne64.png", "description": "17°C", "http_url": "http://localhost/script/?exec=netatmo_thermostat_oauth.php", "http_type": "GET",  "http_params": "&oauth_code=[VAR1]&[VAR2]&maintain_setpoint=[VAR3]&setpoint_temperature=17" },
                         { "value": "17.5", "icon": "consigne64.png", "description": "17.5°C", "http_url": "http://localhost/script/?exec=netatmo_thermostat_oauth.php", "http_type": "GET",  "http_params": "&oauth_code=[VAR1]&[VAR2]&maintain_setpoint=[VAR3]&setpoint_temperature=17.5" },
                         { "value": "18", "icon": "consigne64.png", "description": "18°C", "http_url": "http://localhost/script/?exec=netatmo_thermostat_oauth.php", "http_type": "GET",  "http_params": "&oauth_code=[VAR1]&[VAR2]&maintain_setpoint=[VAR3]&setpoint_temperature=18" },
                         { "value": "18.5", "icon": "consigne64.png", "description": "18.5°C", "http_url": "http://localhost/script/?exec=netatmo_thermostat_oauth.php", "http_type": "GET",  "http_params": "&oauth_code=[VAR1]&[VAR2]&maintain_setpoint=[VAR3]&setpoint_temperature=18.5" },
@@ -131,6 +147,7 @@
             },
             {
                 "device_id": "mode",
+                "create":"plugin.parameters.box_mode",
                 "module_id": "41",
                 "parent_id": "temperature",
                 "type": "http",
@@ -138,14 +155,14 @@
                 "utilisation_id":"4",
                 "parameters":
                     {
-			"VAR1": "plugin.parameters.oauth_code",
-			"VAR2": "module_id=plugin.parameters.thermostat_mac&device_id=plugin.parameters.relais_mac",
+				        "VAR1": "plugin.parameters.oauth_code",
+				        "VAR2": "module_id=plugin.parameters.thermostat_mac&device_id=plugin.parameters.relais_mac",
                         "VAR3": "plugin.parameters.maintainmode",   
                         "value_type": "list",
                         "ignore_errors": 3,
                         "RAW_URL": "http://localhost/script/?exec=netatmo_thermostat_oauth.php&oauth_code=[VAR1]&[VAR2]",
                         "RAW_XPATH": "/netatmo/setpoint_mode",
-                        "POLLING": "10"
+                        "POLLING": "5"
                     },
                 "values":
                     [
@@ -159,6 +176,7 @@
             },
             {
                 "device_id": "etat_chauffage",
+                "create":"plugin.parameters.box_etat_chauffage",
                 "module_id": "51",
                 "parent_id": "temperature",
                 "type": "http",
@@ -166,25 +184,25 @@
                 "utilisation_id":"35",
                 "parameters":
                     {
-			"VAR1": "plugin.parameters.oauth_code",
-			"VAR2": "module_id=plugin.parameters.thermostat_mac&device_id=plugin.parameters.relais_mac",
+				        "VAR1": "plugin.parameters.oauth_code",
+				        "VAR2": "module_id=plugin.parameters.thermostat_mac&device_id=plugin.parameters.relais_mac",
                         "VAR3": "plugin.parameters.maintainmode",   
                         "value_type": "list",
                         "ignore_errors": 3,
                         "RAW_URL": "http://localhost/script/?exec=netatmo_thermostat_oauth.php&oauth_code=[VAR1]&[VAR2]",
                         "RAW_XPATH": "/netatmo/boiler",
-                        "POLLING": "10"
+                        "POLLING": "5"
                     },
                 "values":
                     [
-                        { "value": "0", "icon": "chauffage_b2.png", "description": "Off"},
-                        { "value": "100", "icon": "chauffage_b1.png", "description": "On"},
-			{ "value": "200", "icon": "chauffage64.png", "description": "Confort"}
+                        { "value": "0", "icon": "chauffage_b2.png", "description": "Off"},                        
+                        { "value": "100", "icon": "thermostat_marche.png", "description": "On"},
+                        { "value": "200", "icon": "chauffage64.png", "description": "Confort"}
                     ]        
             },
             {
                 "device_id": "relais_wifi",
-                "create":"plugin.parameters.combo_relais_wifi",
+                "create":"plugin.parameters.box_relais_wifi",
                 "module_id": "51",
                 "parent_id": "temperature",
                 "type": "http",
@@ -192,25 +210,25 @@
                 "utilisation_id":"35",
                 "parameters":
                     {
-			"VAR1": "plugin.parameters.oauth_code",
-			"VAR2": "module_id=plugin.parameters.thermostat_mac&device_id=plugin.parameters.relais_mac",
+				        "VAR1": "plugin.parameters.oauth_code",
+				        "VAR2": "module_id=plugin.parameters.thermostat_mac&device_id=plugin.parameters.relais_mac",
                         "VAR3": "plugin.parameters.maintainmode",   
                         "value_type": "list",
                         "ignore_errors": 3,
                         "RAW_URL": "http://localhost/script/?exec=netatmo_thermostat_oauth.php&oauth_code=[VAR1]&[VAR2]",
                         "RAW_XPATH": "/netatmo/relay_wifi_status",
-                        "POLLING": "10"
+                        "POLLING": "5"
                     },
                 "values":
                     [
-                        { "value": "0", "icon": "wifi_ok.png", "description": "Bon"},
-                        { "value": "1", "icon": "wifi_moyen.png", "description": "Moyen"},
-                        { "value": "2", "icon": "wifi_nok.png", "description": "Faible"}
+                        { "value": "0", "icon": "thermo_signal_bon.png", "description": "Bon"},
+                        { "value": "1", "icon": "thermo_signal_moy.png", "description": "Moyen"},
+                        { "value": "2", "icon": "thermo_signal_min.png", "description": "Faible"}
                     ]        
             },
             {
                 "device_id": "thermo_batt",
-                "create":"plugin.parameters.combo_thermo_batt",                
+                "create":"plugin.parameters.box_thermo_batt",                
                 "module_id": "51",
                 "parent_id": "temperature",
                 "icon": "Batterie.png",
@@ -220,19 +238,19 @@
                 "value_unit": "%",
                 "parameters":
                     {
-			"VAR1": "plugin.parameters.oauth_code",
-			"VAR2": "module_id=plugin.parameters.thermostat_mac&device_id=plugin.parameters.relais_mac",
+				        "VAR1": "plugin.parameters.oauth_code",
+				        "VAR2": "module_id=plugin.parameters.thermostat_mac&device_id=plugin.parameters.relais_mac",
                         "VAR3": "plugin.parameters.maintainmode",   
                         "value_type": "float",
                         "ignore_errors": 3,
                         "RAW_URL": "http://localhost/script/?exec=netatmo_thermostat_oauth.php&oauth_code=[VAR1]&[VAR2]",
                         "RAW_XPATH": "/netatmo/battery_percent",
-                        "POLLING": "10"
+                        "POLLING": "5"
                     }     
             },
             {
                 "device_id": "thermo_rf",
-                "create":"plugin.parameters.combo_thermo_rf",                
+                "create":"plugin.parameters.box_thermo_rf",                
                 "module_id": "51",
                 "parent_id": "temperature",
                 "type": "http",
@@ -240,20 +258,20 @@
                 "utilisation_id":"35",
                 "parameters":
                     {
-			"VAR1": "plugin.parameters.oauth_code",
-			"VAR2": "module_id=plugin.parameters.thermostat_mac&device_id=plugin.parameters.relais_mac",
+				        "VAR1": "plugin.parameters.oauth_code",
+				        "VAR2": "module_id=plugin.parameters.thermostat_mac&device_id=plugin.parameters.relais_mac",
                         "VAR3": "plugin.parameters.maintainmode",   
                         "value_type": "list",
                         "ignore_errors": 3,
                         "RAW_URL": "http://localhost/script/?exec=netatmo_thermostat_oauth.php&oauth_code=[VAR1]&[VAR2]",
                         "RAW_XPATH": "/netatmo/rf_status",
-                        "POLLING": "10"
+                        "POLLING": "5"
                     },
                 "values":
                     [
-                        { "value": "0", "icon": "wifi_ok.png", "description": "Bon"},
-                        { "value": "1", "icon": "wifi_moyen.png", "description": "Moyen"},
-                        { "value": "2", "icon": "wifi_nok.png", "description": "Faible"}
+                        { "value": "0", "icon": "thermo_signal_bon.png", "description": "Bon"},
+                        { "value": "1", "icon": "thermo_signal_moy.png", "description": "Moyen"},
+                        { "value": "2", "icon": "thermo_signal_min.png", "description": "Faible"}
                     ]        
             }                                  
         ]

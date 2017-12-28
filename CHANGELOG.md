@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+
+## [v4.1] - 2017-12-28
+- Change (by @Thibautg16): Remplacement des listes déroulantes par des cases à cocher pour le choix des canaux
+- Change (by @Thibautg16): Nouveaux icônes
+- Added (by @Thibautg16): Les canaux de base sont présents dans la liste des cannaux optionnels précochés
+- Added (by @Lhermine): Ajout du mode "Confort" (si chauffage déclenché par une vanne)
+- Added (by @Lhermine): Ajout des consignes 16 et 16,5
+
+
 ## [v4.0] by @Thibautg16 - 2017-12-10 
 - Added : Personnalisation de l'installation de l'application
 

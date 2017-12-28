@@ -319,8 +319,8 @@ else
 	  }
 	  
       $temperature = $json_devices['body']['devices'][0]["modules"][$i]['measured']['temperature'];
-      $battery_percent = $json_devices['body']['devices'][0]["modules"][$i]['battery_percent'];
-      $rf_status = $json_devices['body']['devices'][0]["modules"][$i]['rf_status'];
+	  $battery_percent = $json_devices['body']['devices'][0]["modules"][$i]['battery_percent'];
+	  $rf_status = $json_devices['body']['devices'][0]["modules"][$i]['rf_status'];
       $relay_command = $json_devices['body']['devices'][0]["modules"][$i]['therm_relay_cmd'];
     }
 
@@ -446,17 +446,17 @@ else
 	}	
 	if (isset($relay_command))
 	{
-		if($relay_command == 100)
-		{
-			$cached_xml .= '<boiler>100</boiler>';
-		}
-		else if($relay_command == 0)
+		if($relay_command == 0)
 		{
 			$cached_xml .= '<boiler>0</boiler>';
 		}
-    		else if($relay_command == 200) 
+		else if($relay_command == 100)
 		{
-			$cached_xml .= '<boiler>200</boiler>'; // mode confort
+			$cached_xml .= '<boiler>100</boiler>';
+		}
+		else if($relay_command == 200)
+		{
+			$cached_xml .= '<boiler>200</boiler>';
 		}
 	}
 	
